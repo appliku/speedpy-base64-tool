@@ -33,6 +33,40 @@ python manage.py runserver 0.0.0.0:8000
 
 This will bind the server to all network interfaces, making it accessible from external networks.
 
+## Deployment
+
+This project is ready for deployment to Appliku with the following configuration:
+
+### GitHub Repository
+The source code is hosted at: https://github.com/appliku/speedpy-base64-tool
+
+### Deployment Process
+To deploy this application to Appliku:
+
+1. **GitHub Setup**: The repository is already configured and pushed to GitHub
+2. **Application Creation**: Create a new application in Appliku dashboard:
+   - Select "From GitHub"
+   - Repository: `appliku/speedpy-base64-tool`
+   - Branch: `master`
+   - Application name: `base64tool`
+3. **Environment Configuration**: Set required environment variables:
+   - `SECRET_KEY` (required)
+   - `ADMIN_URL` (e.g., `/admin/`)
+   - `EMAIL_PROVIDER` (configure your email provider)
+   - `DEFAULT_FROM_EMAIL` (set to your sending address)
+
+### Docker Configuration
+This project uses the standard SpeedPy Docker configuration:
+- Python 3.14 with uv for dependency management
+- Node.js 25.6 for frontend builds
+- PostgreSQL database (automatically configured via DATABASE_URL)
+- Redis cache (automatically configured via REDIS_URL)
+- Tailwind CSS compilation
+
+### Deployment Scripts
+- `run_dev_server.sh` - Run development server on all interfaces
+- `deploy_to_appliku.sh` - Helper script for deployment preparation
+
 ## Project Structure Changes
 
 The following changes were made to the original SpeedPy structure:
@@ -90,6 +124,15 @@ To run the development server:
 ```
 
 The Base64 tool will be available at the root URL (http://localhost:8000/).
+
+For access via tailnet, you can use:
+```bash
+# First run the server with network binding
+./run_dev_server.sh
+
+# Then in another terminal, set up a tunnel (if using tailscale)
+tailscale up
+```
 
 For access via tailnet, you can use:
 ```bash
