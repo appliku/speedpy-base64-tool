@@ -86,3 +86,8 @@ if getattr(settings, "SPEEDPY_BILLING_ENABLED", False):
             path('accounts/billing/portal/', views.AccountBillingPortalView.as_view(), name='account_billing_portal'),
             path('accounts/billing/activation/', views.AccountBillingActivationView.as_view(), name='account_billing_activation'),
         ]
+
+# Base64 tool URL
+urlpatterns += [
+    path('base64-tool/', views.Base64ToolView.as_view(), name='base64_tool'),
+]

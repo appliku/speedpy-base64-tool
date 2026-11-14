@@ -1,0 +1,168 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block head_title %}Base64 Encoder/Decoder Tool{% endblock %}
+
+{% block content %}
+<main class="section">
+    <div class="page-container max-w-4xl">
+        <div class="section-header">
+            <h1 class="h1">Base64 Encoder/Decoder</h1>
+            <p class="lead mt-2">Encode and decode text using Base64 encoding</p>
+        </div>
+
+        <div class="card mt-8">
+            <div class="card-body">
+                <form id="base64-form" class="space-y-6">
+                    <div>
+                        <label for="input-text" class="block text-sm font-medium text-fg mb-2">
+                            Text to encode/decode
+                        </label>
+                        <textarea 
+                            id="input-text"
+                            name="input-text"
+                            rows="5"
+                            class="w-full rounded-lg border border-divider bg-background-paper px-4 py-3 text-fg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                            placeholder="Enter text to encode or decode..."
+                        ></textarea>
+                    </div>
+
+                    <div>
+                        <label for="output-text" class="block text-sm font-medium text-fg mb-2">
+                            Result
+                        </label>
+                        <textarea 
+                            id="output-text"
+                            name="output-text"
+                            rows="5"
+                            class="w-full rounded-lg border border-divider bg-background-paper px-4 py-3 text-fg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                            placeholder="Result will appear here..."
+                            readonly
+                        ></textarea>
+                    </div>
+
+                    <div class="flex flex-wrap gap-4">
+                        <button 
+                            type="button" 
+                            id="encode-btn"
+                            class="btn btn-contained btn-primary"
+                        >
+                            Encode to Base64
+                        </button>
+                        <button 
+                            type="button" 
+                            id="decode-btn"
+                            class="btn btn-contained btn-secondary"
+                        >
+                            Decode from Base64
+                        </button>
+                        <button 
+                            type="button" 
+                            id="clear-btn"
+                            class="btn btn-outlined btn-neutral"
+                        >
+                            Clear All
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="mt-8 grid grid-cols-1 gap-6 md:grid-cols-2">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="h3">How Base64 Works</h2>
+                </div>
+                <div class="card-body">
+                    <p class="text-fg-secondary">
+                        Base64 is a binary-to-text encoding scheme that represents binary data in an ASCII string format.
+                    </p>
+                    <ul class="mt-4 space-y-2 list-disc pl-5 text-fg-secondary">
+                        <li>Each 3 bytes of binary data are converted to 4 Base64 characters</li>
+                        <li>Uses a 64-character alphabet: A-Z, a-z, 0-9, +, /</li>
+                        <li>Padding with = characters ensures proper length</li>
+                        <li>Commonly used in email, web applications, and data transmission</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="h3">Use Cases</h2>
+                </div>
+                <div class="card-body">
+                    <p class="text-fg-secondary">
+                        Base64 encoding is useful for:
+                    </p>
+                    <ul class="mt-4 space-y-2 list-disc pl-5 text-fg-secondary">
+                        <li>Embedding images in HTML/CSS/JS</li>
+                        <li>Encoding binary data for transmission over text-based protocols</li>
+                        <li>Storing binary data in databases or configuration files</li>
+                        <li>Creating URL-safe identifiers</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const inputText = document.getElementById('input-text');
+    const outputText = document.getElementById('output-text');
+    const encodeBtn = document.getElementById('encode-btn');
+    const decodeBtn = document.getElementById('decode-btn');
+    const clearBtn = document.getElementById('clear-btn');
+
+    // Function to make API calls
+    async function processText(action) {
+        const text = inputText.value;
+        
+        if (!text) {
+            outputText.value = "Please enter some text to process";
+            return;
+        }
+
+        try {
+            const response = await fetch('{% url "base64_tool" %}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+                },
+                body: JSON.stringify({
+                    action: action,
+                    text: text
+                })
+            });
+
+            const result = await response.json();
+            
+            if (response.ok) {
+                outputText.value = result.result;
+            } else {
+                outputText.value = `Error: ${result.error}`;
+            }
+        } catch (error) {
+            outputText.value = `Network error: ${error.message}`;
+        }
+    }
+
+    // Event listeners
+    encodeBtn.addEventListener('click', () => processText('encode'));
+    decodeBtn.addEventListener('click', () => processText('decode'));
+    
+    clearBtn.addEventListener('click', function() {
+        inputText.value = '';
+        outputText.value = '';
+    });
+
+    // Handle Enter key in input field to trigger encode
+    inputText.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter' && e.ctrlKey) {
+            processText('encode');
+        }
+    });
+});
+</script>
+{% endblock %}

@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block head_title %}Welcome to SpeedPy Base64 Tool{% endblock %}
+
+{% block content %}
+<main class="section">
+    <div class="page-container max-w-4xl">
+        <div class="section-header">
+            <h1 class="h1">SpeedPy Base64 Tool</h1>
+            <p class="lead mt-2">A simple tool to encode and decode Base64 strings</p>
+        </div>
+
+        <div class="card mt-8">
+            <div class="card-body">
+                <p class="text-fg-secondary">
+                    This is a fresh SpeedPy fork with a simplified interface. The main page now 
+                    serves as a Base64 encoder/decoder tool.
+                </p>
+                <p class="mt-4 text-fg-secondary">
+                    You can access other pages through the navigation menu or by visiting:
+                </p>
+                <ul class="mt-2 space-y-1 list-disc pl-5 text-fg-secondary">
+                    <li><a href="{% url 'dashboard' %}" class="text-primary hover:underline">Dashboard</a></li>
+                    <li><a href="{% url 'speedpyui_preview' %}" class="text-primary hover:underline">SpeedPy UI Preview</a></li>
+                    <li><a href="{% url 'pricing' %}" class="text-primary hover:underline">Pricing</a></li>
+                    <li><a href="{% url 'contact' %}" class="text-primary hover:underline">Contact</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="mt-8 grid grid-cols-1 gap-6 md:grid-cols-2">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="h3">How to Use</h2>
+                </div>
+                <div class="card-body">
+                    <p class="text-fg-secondary">
+                        Simply enter text in the input field and click either "Encode to Base64" 
+                        or "Decode from Base64" to convert your text.
+                    </p>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="h3">Features</h2>
+                </div>
+                <div class="card-body">
+                    <ul class="space-y-2 list-disc pl-5 text-fg-secondary">
+                        <li>Real-time Base64 encoding and decoding</li>
+                        <li>Supports UTF-8 characters</li>
+                        <li>Responsive design for all devices</li>
+                        <li>Clear functionality to reset the form</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+{% endblock %}

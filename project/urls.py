@@ -40,7 +40,7 @@ def api_docs_view(view_class, **kwargs):
 
 
 urlpatterns = [
-    path("", views.WelcomeToSpeedPyView.as_view(), name="welcome"),
+    path("", views.Base64ToolView.as_view(), name="welcome"),
     path("demo/", include("demoapp.urls")),  # SPEEDPY_DEMO: demo Product CRUD — remove before production
     path("pricing", views.PricingView.as_view(), name="pricing"),
     path("contact/", views.ContactView.as_view(), name="contact"),

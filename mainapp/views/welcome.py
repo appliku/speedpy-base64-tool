@@ -4,7 +4,7 @@ from mainapp.subscription_plans import get_public_plans
 
 
 class WelcomeToSpeedPyView(TemplateView):
-    template_name = "mainapp/welcome.html"
+    template_name = "mainapp/simple_welcome.html"
 
 
 class PricingView(TemplateView):

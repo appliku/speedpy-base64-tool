@@ -1,8 +1,10 @@
 from django.conf import settings as django_settings
 
 from .welcome import WelcomeToSpeedPyView, PricingView
+from .demo_welcome import DemoWelcomeView
 from .contact import ContactView
 from .dashboard import DashboardView
+from .base64_tool import Base64ToolView
 from .speedpyui_preview import SpeedpyuiFormViewExampleView, SpeedpyuiPreviewView
 from .tour_views import mark_tour_complete
 from .teams import (
@@ -32,9 +34,11 @@ from .billing import (
 
 __all__ = [
     "WelcomeToSpeedPyView",
+    "DemoWelcomeView",
     "PricingView",
     "ContactView",
     "DashboardView",
+    "Base64ToolView",
     "SpeedpyuiPreviewView",
     "SpeedpyuiFormViewExampleView",
     "mark_tour_complete",

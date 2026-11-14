@@ -1,102 +1,101 @@
-# SpeedPy
+# SpeedPy Base64 Tool
 
-**The free, open-source Django SaaS boilerplate for the AI era.**
-
-[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE.md)
-[![GitHub stars](https://img.shields.io/github/stars/speedpy/speedpy?style=social)](https://github.com/speedpy/speedpy/stargazers)
-
-Instantly start your next SaaS project. Built on the rock-solid foundation of Django, supercharged with production-ready APIs, Webhooks, OAuth2, and Model Context Protocol (MCP) for AI agents. Free forever, MIT-licensed, and yours to deploy anywhere.
-
-[Website](https://speedpy.com) · [Documentation](https://docs.speedpy.com) · [Discord](https://speedpy.com/discord)
-
-> ⭐ **Star this repo** if SpeedPy saves you time — it helps other developers find it.
+This is a customized SpeedPy project that replaces the default welcome page with a simple Base64 encoder/decoder tool.
 
 ## Features
 
-* **Rock-Solid Foundation:** Django's battle-tested ORM, server-rendered UI with HTMX, Alpine.js, and TailwindCSS.
-* **API-First & Integration Ready:** Comprehensive REST API built with Django Rest Framework (DRF) and documented via OpenAPI. Webhooks engine for real-time events.
-* **Enterprise-Grade Authentication:** OAuth2 Provider, Personal Access Tokens (PATs), granular scopes, and team-scoped resources.
-* **Built for the AI Era:** Out-of-the-box MCP server template, first-party CLI, and pre-written agent recipes to help AI coding assistants write integrations.
-* **Multi-Tenant SaaS:** Teams, roles, and invitations out of the box with smart role-based permissions.
-* **Background Tasks:** Celery integration for asynchronous processing.
-* **Security First:** Multi-factor authentication (OTP) and encrypted database fields.
-* **12 Factor App:** Uses environment variables for configuration.
+- Simple two-textarea interface for Base64 encoding and decoding
+- Encode text to Base64 format
+- Decode Base64 back to plain text
+- Clear functionality to reset the form
+- Responsive design using SpeedPy UI components
+- Real-time conversion with AJAX requests
 
-## Quick Start
+## Usage
 
-### Requirements
+1. Enter text in the input textarea
+2. Click "Encode to Base64" to convert to Base64 format
+3. Click "Decode from Base64" to convert back to plain text
+4. Use "Clear All" to reset both textareas
 
-* Linux or macOS
-* Git installed and configured
-* One of the following environments:
-  * **Docker mode:** Docker and Docker Compose
-  * **Local mode:** [`uv`](https://docs.astral.sh/uv/) and Node.js (LTS)
+## Running the Development Server
 
-### Installation
-
-If you haven't cloned the repository, you can use the one-line download and start script:
+To make the development server accessible via tailnet or other networks, use:
 
 ```bash
-wget -qO- https://speedpy.com/install | bash
+./run_dev_server.sh
 ```
 
-If you have already cloned the repository, pick a mode and run the matching initialization script in the project root:
-
+Or run directly with:
 ```bash
-# Docker Compose: Postgres + Redis + Celery + nginx media
-bash init-docker.sh
-
-# uv + npm on the host: SQLite, no Redis, Celery in always-eager mode
-bash init-local.sh
+python manage.py runserver 0.0.0.0:8000
 ```
 
-### Running the Project
+This will bind the server to all network interfaces, making it accessible from external networks.
 
-**Local mode (uv):**
-Start the development server in one terminal and Tailwind watch in another:
+## Project Structure Changes
 
+The following changes were made to the original SpeedPy structure:
+
+### Views
+- Added `Base64ToolView` in `mainapp/views/base64_tool.py`
+- Modified `WelcomeToSpeedPyView` in `mainapp/views/welcome.py` to use a simplified welcome page
+- Added `DemoWelcomeView` in `mainapp/views/demo_welcome.py` for future demo functionality
+
+### Templates
+- Created `templates/mainapp/base64_tool.html` for the main Base64 tool interface
+- Created `templates/mainapp/simple_welcome.html` for the simplified welcome page
+- Created `templates/mainapp/welcome_demo.html` for the original welcome page (can be restored)
+
+### URLs
+- Updated `mainapp/urls.py` to include the Base64 tool URL pattern
+- Updated `project/urls.py` to make the Base64 tool the default page
+
+## Customization Options
+
+To restore the original SpeedPy welcome page, you can:
+
+1. Replace the `WelcomeToSpeedPyView` in `mainapp/views/welcome.py` with the original version
+2. Update the URL configuration in `project/urls.py` to point back to the demo welcome view:
+   ```python
+   path("", views.DemoWelcomeView.as_view(), name="welcome"),
+   ```
+3. Or modify `templates/mainapp/simple_welcome.html` to include links to the various SpeedPy features
+
+## API Endpoints
+
+The Base64 tool also provides a JSON API for programmatic access:
+
+- POST `/base64-tool/` with JSON body:
+  ```json
+  {
+    "action": "encode|decode",
+    "text": "your text here"
+  }
+  ```
+
+Response will be:
+```json
+{
+  "result": "encoded or decoded text",
+  "action": "encode|decode"
+}
+```
+
+## Development
+
+To run the development server:
 ```bash
-uv run bash dev.sh
-npm run tailwind:watch
+./run_dev_server.sh
 ```
 
-**Docker mode:**
-The `web` service runs `bash dev.sh` automatically. Bring everything up with:
+The Base64 tool will be available at the root URL (http://localhost:8000/).
 
+For access via tailnet, you can use:
 ```bash
-docker compose up -d
+# First run the server with network binding
+./run_dev_server.sh
+
+# Then in another terminal, set up a tunnel (if using tailscale)
+tailscale up
 ```
-
-## Documentation
-
-Comprehensive documentation is available at [docs.speedpy.com](https://docs.speedpy.com). 
-
-Key documentation pages:
-* [Installation & Requirements](https://docs.speedpy.com/installation)
-* [Project Layout](https://docs.speedpy.com/project-layout)
-* [Authentication](https://docs.speedpy.com/authentication)
-* [API Reference](https://docs.speedpy.com/api)
-* [Webhooks](https://docs.speedpy.com/webhooks)
-* [Integrations](https://docs.speedpy.com/integrations)
-* [Teams](https://docs.speedpy.com/teams)
-* [Deployment](https://docs.speedpy.com/deployment)
-
-## Project Structure
-
-SpeedPy uses a single-app Django project layout. The majority of your code will live in the `mainapp` directory, which is structured as a series of Python packages instead of single files (e.g., `mainapp/models/`, `mainapp/views/`, `mainapp/forms/`).
-
-A separate `usermodel` app handles the custom user model with email-based authentication.
-
-## Production Readiness
-
-Before deploying to production, ensure you remove demo content and placeholder pages. Refer to the `PRODUCTION_READY.md` file in the repository or the [Production Readiness](https://docs.speedpy.com/production-readiness) documentation for a complete checklist.
-
-## Deployment
-
-SpeedPy includes an `appliku.yml` file for automatic configuration with [Appliku](https://appliku.com). See the [Deployment documentation](https://docs.speedpy.com/deployment) for detailed instructions on setting up your application, databases, and background workers.
-
-## License
-
-SpeedPy is released under the [MIT License](LICENSE.md).
-
-The bundled Inter font (`static/fonts/Inter-SemiBold.ttf`, used for generating Open Graph images) is licensed separately under the [SIL Open Font License 1.1](static/fonts/OFL-Inter.txt). See [NOTICE.md](NOTICE.md) for all third-party notices.
